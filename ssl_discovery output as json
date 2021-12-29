@@ -1,0 +1,22 @@
+[root@xxx sslscript]# cat ssl_discovery
+#!/bin/ksh
+
+#CSV_FILE="/etc/zabbix/sslscript/certlist.csv"
+CSV_FILE="/tmp/certlist.csv"
+
+tail -n +2 "$CSV_FILE" | while IFS=, read SSLSITE PORT REMARK
+do
+        SSLSITE2=$(echo ${SSLSITE} | tr -d ' ')
+
+        # if empty row in csv file, skip
+        if [ "${SSLSITE2}" == "" ]; then
+                continue
+        fi
+
+        #echo $SSLSITE
+        #echo $PORT
+        #echo "================"
+        OUTPUT=$OUTPUT'{"{#SSLSITE}":"'${SSLSITE2}'"},'
+done
+echo -e '{"data":['${OUTPUT%?}']}'
+[root@xxx sslscript]#
